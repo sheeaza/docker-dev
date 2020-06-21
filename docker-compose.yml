@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  dev:
+    image: kungfury:1.0
+    init: true
+    volumes:
+      - type: bind
+        source: ~/.ssh
+        target: /root/.ssh
+      - type: bind
+        source: ~/.gitconfig
+        target: /root/.gitconfig
+      - type: bind
+        source: ~/
+        target: /root/workspace
+      - type: bind
+        source: ~/bin
+        target: /root/bin
+      - type: volume
+        source: home
+        target: /root/
+    tty: true
+    stdin_open: true
+
+volumes:
+  home:
