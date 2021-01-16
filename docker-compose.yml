@@ -15,7 +15,7 @@ services:
         target: /root/workspace
       - type: bind
         source: ~/bin
-        target: /root/bin
+        target: /root/hostbin
       - type: volume
         source: home
         target: /root/
