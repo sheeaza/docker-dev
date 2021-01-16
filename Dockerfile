@@ -65,5 +65,4 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/ins
 RUN sed -i 's/\/root:\/bin\/ash/\/root:\/usr\/bin\/fish/g' /etc/passwd
 
 WORKDIR /root/
-RUN unset HTTP_PROXY HTTPS_PROXY
 ENTRYPOINT ["/usr/bin/fish"]
