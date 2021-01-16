@@ -1,11 +1,12 @@
 FROM alpine:latest as build
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk add -U --no-cache build-base ncurses-dev py3-pip python3-dev git bash cmake
 
 WORKDIR /root/tmp/
 # gtags
-RUN wget https://ftp.gnu.org/pub/gnu/global/global-6.6.4.tar.gz && tar xvf global-6.6.4.tar.gz && \
-    cd global-6.6.4 && ./configure && make -j8 && make install-exec DESTDIR=/root/tmp/global/install
+RUN wget https://www.tamacom.com/global/global-6.6.5.tar.gz && tar xvf global-6.6.5.tar.gz && \
+    cd global-6.6.5 && ./configure && make -j8 && make install-exec DESTDIR=/root/tmp/global/install
 
 COPY pyreq.txt /root/tmp/
 RUN  pip install -r pyreq.txt --prefix=/root/tmp/pipinstall
@@ -20,10 +21,12 @@ FROM alpine:latest as deploy
 COPY --from=build /root/tmp/global/install/usr/local/bin/ /usr/local/bin/
 COPY --from=build /root/tmp/pipinstall /usr/
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk add -U --no-cache \
     neovim git \
     fish tmux openssh-client bash \
-    tree curl less ripgrep perl py3-pip tar npm findutils tig ctags
+    tree curl less ripgrep perl py3-pip tar npm findutils tig ctags \
+    clang-extra-tools
 
 ENV LANG=C.UTF-8 LANGUAGE=C.UTF-8 LC_ALL=C.UTF-8
 # TERM
@@ -61,6 +64,6 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/ins
 # switch shell to fish
 RUN sed -i 's/\/root:\/bin\/ash/\/root:\/usr\/bin\/fish/g' /etc/passwd
 
-RUN apk add -U --no-cache clang-extra-tools
 WORKDIR /root/
+RUN unset HTTP_PROXY HTTPS_PROXY
 ENTRYPOINT ["/usr/bin/fish"]
