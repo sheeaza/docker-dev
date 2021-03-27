@@ -49,7 +49,7 @@ ENV VIRTUAL=nvim
 ENV EDITOR=nvim
 
 # fish
-RUN curl -L https://get.oh-my.fish > install && fish install --noninteractive --yes
+RUN curl -L https://get.oh-my.fish > install && fish install --noninteractive --yes && rm install
 RUN fish -c 'omf install clearance' && fish -c 'set -Ux EDITOR nvim' && fish -c 'set -Ux VISUAL nvim' && \
     fish -c 'alias -s l="ls --group-directories-first"' && \
     fish -c 'alias -s la="l -a"' && fish -c 'alias -s ll="l -lh"' && fish -c 'alias -s lla="ll -a"' && \
